@@ -11,7 +11,8 @@ dist-ssr/
 .env.*.local
 
 # Database & local data
-data/
+/data/
+!src/data/
 pglite-data/
 server/pgdata_*/
 pgdata_*/
