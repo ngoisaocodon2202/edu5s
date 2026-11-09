@@ -2,9 +2,12 @@ export const TRANSLATIONS = {
   vi: {
     // Topbar & Navbar
     nav: {
-      forIndividual: 'Dành cho Cá nhân',
-      forBusiness: 'Dành cho Doanh nghiệp (AI B2B)',
-      forStudent: 'Dành cho Học sinh & Sinh viên',
+      forStudent: '1. Học sinh (Miễn phí)',
+      forCampus: '2. Trường Đại học (Tín chỉ)',
+      forIndividual: '3. Cá nhân (Đi làm)',
+      forBusiness: '4. Doanh nghiệp (B2B)',
+      forGovernment: '5. Chính phủ (Du học & Lao động)',
+      myDashboard: 'Bảng Điều Khiển Của Tôi',
       hotlineLabel: 'Hotline / Zalo:',
       b2bConsult: 'Tư vấn Đào tạo 5S',
       explore: 'Khám phá',
@@ -329,9 +332,12 @@ export const TRANSLATIONS = {
   en: {
     // Topbar & Navbar
     nav: {
-      forIndividual: 'For Individuals',
-      forBusiness: 'For Enterprise (AI B2B)',
-      forStudent: 'For Students & Campus',
+      forStudent: '1. For Students (Free)',
+      forCampus: '2. Campus (Credits)',
+      forIndividual: '3. Individuals (Pro)',
+      forBusiness: '4. Enterprise (B2B)',
+      forGovernment: '5. Government & Global',
+      myDashboard: 'My Dashboard',
       hotlineLabel: 'Hotline / Zalo:',
       b2bConsult: '5S B2B Consulting',
       explore: 'Explore',

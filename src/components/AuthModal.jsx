@@ -54,16 +54,21 @@ export default function AuthModal({
   const currentRoleObj =
     USER_ROLES.find((r) => r.id === selectedRole) || USER_ROLES[0];
 
-  const roleOptions = USER_ROLES.map((r) => ({
+  const primaryRoleIds = ['student', 'campus', 'individual', 'business', 'government'];
+  const roleOptions = USER_ROLES.filter((r) => primaryRoleIds.includes(r.id)).map((r) => ({
     value: r.id,
     label: lang === 'en' ? r.shortLabelEn : r.shortLabel,
     sublabel: lang === 'en' ? r.labelEn : r.label,
     badge:
       r.id === 'student'
         ? 'FREE'
+        : r.id === 'campus'
+        ? 'CREDIT'
+        : r.id === 'individual'
+        ? 'PRO'
         : r.id === 'business'
         ? 'B2B'
-        : undefined,
+        : 'GOV',
   }));
 
   const handleSignInSubmit = async (e) => {

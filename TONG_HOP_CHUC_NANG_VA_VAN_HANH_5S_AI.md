@@ -174,12 +174,81 @@ graph LR
 
 ---
 
-## 7. KẾ HOẠCH PHÁT TRIỂN & MỞ RỘNG (GIAI ĐOẠN TIẾP THEO)
+## 7. HỆ SINH THÁI 5 PHÂN HỆ ĐỐI TƯỢNG ĐÀO TẠO (MÔ HÌNH COURSERA CHUẨN MỰC)
 
-1. **Cấp Chứng chỉ Tốt nghiệp Blockchain/NFT:** Học viên hoàn thành đủ 20 bài học và vượt qua bài thi thực hành sẽ được cấp mã chứng chỉ số có thể đính kèm trên LinkedIn.
-2. **Tính năng Doanh nghiệp (B2B Corporate Portal):** Cho phép doanh nghiệp mua gói đào tạo theo lô (seat license) và theo dõi dashboard tiến độ học của từng nhân viên phòng ban.
-3. **Hệ thống AI Chatbot Trợ giảng 24/7:** Tích hợp trực tiếp trợ lý Gemini 2.5 Pro vào góc phải bài học để giải đáp bài tập lập trình và gỡ lỗi code ngay trong lúc xem video.
+Hệ thống được kiến trúc theo tiêu chuẩn quốc tế của **Coursera**, chia tách rõ ràng 5 tệp đối tượng với 5 Bảng Điều Khiển (Dashboard) chuyên biệt:
+
+### 7.1. Phân hệ 1: Dành Cho Học Sinh (Student Ecosystem)
+- **Đặc trưng:** Học tập miễn phí 100% các khóa học nền tảng tư duy số, an toàn không gian mạng và AI Logic. Các tính năng nâng cao (Pro) được tích hợp mở rộng sau.
+- **Trang Dashboard Học Sinh (`StudentDashboard`):**
+  - **Chuỗi học tập (Daily Streak) & Điểm kinh nghiệm (XP):** Cơ chế Gamification khích lệ học sinh duy trì thói quen học tập hàng ngày.
+  - **Kệ huy hiệu danh dự:** Huy hiệu Tân Binh Số, Nhà Thám Hiểm AI, Vệ Sĩ Không Gian Mạng,...
+  - **La bàn định hướng nghề nghiệp số (Future Career Compass):** Đưa ra lộ trình định hướng nghề nghiệp tương lai cho học sinh (AI Engineer, Data Analyst, Digital Creator).
+  - **Thử thách AI hàng ngày:** Câu hỏi trắc nghiệm tương tác kiểm tra kiến thức công nghệ tức thì.
+
+### 7.2. Phân hệ 2: Dành Cho Trường Đại Học & Giảng Viên (Campus & Credits)
+- **Đặc trưng:** Khung chương trình đào tạo tích lũy tín chỉ học phần (Academic Credits) tương đương chuẩn giáo trình Đại học.
+- **Trang Dashboard Đại Học (`CampusDashboard`):**
+  - **Hồ sơ sinh viên & Tích lũy tín chỉ:** Theo dõi số tín chỉ tích lũy (9/12 tín chỉ), điểm trung bình tích lũy GPA (3.8/4.0).
+  - **Mã học phần tương đương:** Quy đổi mã môn học chuẩn (`CS-5S101`, `SEC-5S204`, `AIO-5S302`).
+  - **Cổng nộp đồ án Capstone:** Sinh viên nộp repository GitHub và báo cáo đề tài thực hành, hệ thống chấm điểm tự động.
+  - **Bảng điểm học thuật & Xuất chứng nhận PDF:** Tra cứu bảng điểm chính thức và xuất chứng nhận tín chỉ hoàn thành khóa học.
+  - **Cổng giảng viên phụ trách (Faculty Advisor Portal):** Kết nối trực tiếp với giảng viên hướng dẫn của trường.
+
+### 7.3. Phân hệ 3: Dành Cho Cá Nhân & Người Đi Làm (Individual Pro)
+- **Đặc trưng:** Nâng cấp kỹ năng nghề nghiệp thực chiến, chuyển đổi vị trí công việc sang Kỹ sư AI-Native, gấp đôi năng suất làm việc.
+- **Trang Dashboard Cá Nhân Pro (`IndividualDashboard`):**
+  - **Ma trận năng lực kỹ năng (Competency Matrix):** Đo lường radar 4 trụ cột kỹ năng: Antigravity IDE, Cursor & Claude, Copilot Office, Security Zero-Trust.
+  - **Chứng chỉ nghề nghiệp chuyên nghiệp:** Cấp mã chứng chỉ định danh kèm mã QR xác thực và nút đính kèm hồ sơ **Add to LinkedIn Profile**.
+  - **Bộ công cụ Pro Toolkit:** Thư viện 500+ Prompt mẫu, Bộ template Excel tài chính tự động, Bộ slide PowerPoint AI chuẩn doanh nghiệp.
+  - **Lộ trình thăng tiến thu nhập (Salary Boost Roadmap):** Hướng dẫn bước nhảy thu nhập từ mức cơ bản lên mức $2,500 – $4,000/tháng.
+
+### 7.4. Phân hệ 4: Dành Cho Doanh Nghiệp (Enterprise & Corporate B2B)
+- **Đặc trưng:** Đào tạo nội bộ quy mô lớn cho toàn thể nhân sự công ty, quản lý chỉ số hoàn vốn đầu tư đào tạo (ROI Metrics).
+- **Trang Dashboard Doanh Nghiệp (`BusinessDashboard`):**
+  - **Bảng chỉ số đo lường hiệu quả (Executive ROI):** +320% Năng suất toàn công ty, 15 giờ tiết kiệm/nhân sự/tuần, -95% Nguy cơ rò rỉ dữ liệu.
+  - **Tiến độ học tập theo 3 phòng ban:** Khối Kỹ thuật (Tech / Dev), Khối Kinh doanh & Marketing, Khối Vận hành & Kế toán.
+  - **Quản lý 50 giấy phép tài khoản (Seat Licenses):** Gửi lời mời nhân viên qua email, phân quyền học tập, thu hồi hoặc cấp phát giấy phép.
+  - **Xuất báo cáo Ban Giám Đốc:** Xuất file bảng tính Excel báo cáo chi tiết tỷ lệ hoàn thành đào tạo của các phòng ban.
+
+### 7.5. Phân hệ 5: Dành Cho Chính Phủ, Cộng Đồng & Lao Động Toàn Cầu (Government & Global Workforce)
+- **Đặc trưng:** Cổng phổ cập kỹ năng số quốc gia, an toàn an ninh mạng cộng đồng, đào tạo chuyển giao công nghệ, du học và xuất khẩu lao động.
+- **Trang Dashboard Chính Phủ (`GovernmentDashboard`):**
+  - **Chỉ số tác động quốc gia:** 34,500+ Công dân & Lao động được đào tạo, 63/63 Tỉnh thành phủ sóng, 99.4% Tỷ lệ qua sát hạch kỹ năng.
+  - **3 Trụ cột phổ cập kỹ năng số:** Công dân số & An toàn mạng (phòng chống Deepfake, bảo mật 2 lớp), Kỹ năng AI văn phòng & hành chính công, Kỹ năng số cho thị trường lao động quốc tế.
+  - **Cổng việc làm quốc tế & Du học (Global Workforce Mobility):** Cung cấp thông tin và lộ trình đào tạo sang thị trường Nhật Bản 🇯🇵, Hàn Quốc 🇰🇷, Đức & Châu Âu 🇩🇪.
+  - **Quỹ học bổng cộng đồng:** Theo dõi ngân sách học bổng đã giải ngân tài trợ 100% học phí cho học viên diện chính sách và vùng sâu vùng xa.
+  - **Biểu mẫu đăng ký tư vấn & hợp tác địa phương:** Kết nối trực tiếp giữa các cơ quan quản lý nhà nước, địa phương với ban điều hành 5S AI Education.
 
 ---
 
-> **Kết luận:** Nền tảng **5S AI Education** đã hoàn thiện toàn diện về mặt sản phẩm, trải nghiệm học viên, hệ thống thanh toán tự động và hạ tầng bảo mật DRM. Sản phẩm sẵn sàng 100% để công ty đưa vào vận hành thương mại và triển khai chiến dịch truyền thông tuyển sinh.
+## 8. HƯỚNG DẪN ĐIỀU HƯỚNG VÀ TRẢI NGHIỆM GIAO DIỆN MỚI
+
+1. **Thanh Menu Điều Hướng (Top Navigation Switcher):**
+   - Đặt ngay trên cùng thanh Navbar với 5 tab biểu tượng đại diện cho 5 phân hệ:
+     - 🎓 **Học sinh**
+     - 🏫 **Đại học**
+     - 💼 **Cá nhân**
+     - 🏢 **Doanh nghiệp**
+     - 🏛️ **Chính phủ**
+   - Nút nổi bật **Bảng Điều Khiển Của Tôi (My Dashboard)** giúp người dùng truy cập ngay vào không gian học tập của vai trò mình.
+
+2. **Khung Banner Nổi Bật Phân Hệ (Coursera Audience Spotlight):**
+   - Khi chọn bất kỳ phân hệ nào, hệ thống hiển thị banner sang trọng phong cách Coursera tại đầu danh mục khóa học.
+   - Hiển thị đầy đủ Badge định danh, slogan giá trị và nút hành động nhanh **"Vào Bảng Điều Khiển"** để trải nghiệm ngay.
+
+3. **Bộ Lọc Khóa Học Thông Minh (Adaptive Course Catalog):**
+   - Lọc chính xác danh sách khóa học phù hợp với từng phân hệ đối tượng mà không làm gián đoạn trải nghiệm của người dùng.
+
+---
+
+## 9. KẾ HOẠCH PHÁT TRIỂN TIẾP THEO
+
+1. **Cấp Chứng chỉ Tốt nghiệp Blockchain/NFT:** Học viên hoàn thành đủ 20 bài học và vượt qua bài thi thực hành sẽ được cấp mã chứng chỉ số có thể đính kèm trên LinkedIn.
+2. **Hệ thống AI Chatbot Trợ giảng 24/7:** Tích hợp trực tiếp trợ lý Gemini Pro vào góc phải bài học để giải đáp bài tập lập trình và gỡ lỗi code ngay trong lúc xem video.
+3. **Mở rộng kho bài học video tương tác:** Bổ sung thêm các kịch bản thực hành chuyên sâu theo nhu cầu đặt hàng đào tạo của các doanh nghiệp và trường Đại học đối tác.
+
+---
+
+> **Kết luận:** Nền tảng **5S AI Education** đã hoàn thiện toàn diện về mặt sản phẩm, trải nghiệm học viên, hệ thống thanh toán tự động, hạ tầng bảo mật DRM và **chuẩn hóa trọn vẹn 5 phân hệ người dùng theo mô hình Coursera quốc tế**. Sản phẩm sẵn sàng 100% để công ty đưa vào vận hành thương mại và triển khai chiến dịch truyền thông tuyển sinh.
+

@@ -11,17 +11,21 @@ import {
   GraduationCap,
   Building2,
   UserCheck,
+  School,
+  Landmark,
   SlidersHorizontal,
   ArrowRight,
   LayoutGrid,
   LayoutDashboard,
 } from 'lucide-react';
-import { PILLARS, USER_ROLES, CONTACT_INFO } from '../data/coursesData';
+import { PILLARS, USER_ROLES, AUDIENCES, CONTACT_INFO } from '../data/coursesData';
 import CustomDropdown from './CustomDropdown';
 import { useLanguage, LanguageSwitcher } from '../context/LanguageContext';
 
 export default function Navbar({
   user,
+  activeAudience = 'all',
+  onSelectAudience,
   selectedPillar,
   onSelectPillar,
   searchQuery,
@@ -30,6 +34,7 @@ export default function Navbar({
   onLogout,
   onRoleChange,
   onOpenAdmin,
+  onOpenDashboard,
   onGoHome,
 }) {
   const { lang, t } = useLanguage();
@@ -51,6 +56,8 @@ export default function Navbar({
         ? 'FREE'
         : r.id === 'business'
         ? 'B2B'
+        : r.id === 'campus'
+        ? 'CREDIT'
         : undefined,
   }));
 
@@ -62,19 +69,52 @@ export default function Navbar({
     return <Briefcase className="w-5 h-5 text-[#0EA5E9]" />;
   };
 
+  const handleAudienceClick = (audienceId) => {
+    if (onSelectAudience) {
+      onSelectAudience(audienceId);
+    }
+  };
+
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-blue-100/80 shadow-[0_2px_20px_-4px_rgba(0,86,210,0.08)]">
-      {/* Top Executive Audience Switcher Bar */}
+      {/* Top Executive Audience Switcher Bar (Coursera 5-Audience Benchmark) */}
       <div className="bg-gradient-to-r from-[#0B1120] via-[#0F1E3A] to-[#0B1120] text-slate-300 text-xs border-b border-slate-800/80">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-9">
-          <div className="flex items-center space-x-1 sm:space-x-2 overflow-x-auto no-scrollbar">
+          <div className="flex items-center space-x-1 sm:space-x-1.5 overflow-x-auto no-scrollbar">
+            {/* 1. Student */}
             <button
-              onClick={() => {
-                if (user && !isAdmin) onRoleChange('individual_all');
-                else if (!user) onOpenAuth('register', 'individual_all');
-              }}
-              className={`px-3 py-1.5 rounded-t-md font-semibold transition flex items-center gap-1.5 whitespace-nowrap ${
-                user?.role?.startsWith('individual')
+              type="button"
+              onClick={() => handleAudienceClick('student')}
+              className={`px-2.5 py-1.5 rounded-t-md font-semibold transition flex items-center gap-1.5 whitespace-nowrap ${
+                activeAudience === 'student' || user?.role === 'student'
+                  ? 'bg-white text-[#0284C7] shadow-sm'
+                  : 'hover:text-white text-slate-300'
+              }`}
+            >
+              <GraduationCap className="w-3.5 h-3.5 text-sky-400" />
+              <span>{t.nav.forStudent}</span>
+            </button>
+
+            {/* 2. Campus */}
+            <button
+              type="button"
+              onClick={() => handleAudienceClick('campus')}
+              className={`px-2.5 py-1.5 rounded-t-md font-semibold transition flex items-center gap-1.5 whitespace-nowrap ${
+                activeAudience === 'campus' || user?.role === 'campus'
+                  ? 'bg-white text-[#312E81] shadow-sm'
+                  : 'hover:text-white text-slate-300'
+              }`}
+            >
+              <School className="w-3.5 h-3.5 text-indigo-400" />
+              <span>{t.nav.forCampus}</span>
+            </button>
+
+            {/* 3. Individual */}
+            <button
+              type="button"
+              onClick={() => handleAudienceClick('individual')}
+              className={`px-2.5 py-1.5 rounded-t-md font-semibold transition flex items-center gap-1.5 whitespace-nowrap ${
+                activeAudience === 'individual' || user?.role === 'individual' || user?.role?.startsWith('individual')
                   ? 'bg-white text-[#0056D2] shadow-sm'
                   : 'hover:text-white text-slate-300'
               }`}
@@ -82,36 +122,33 @@ export default function Navbar({
               <UserCheck className="w-3.5 h-3.5 text-sky-400" />
               <span>{t.nav.forIndividual}</span>
             </button>
+
+            {/* 4. Business */}
             <button
-              onClick={() => {
-                if (user && !isAdmin) onRoleChange('business');
-                else {
-                  const el = document.getElementById('enterprise-section');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-              className={`px-3 py-1.5 rounded-t-md font-semibold transition flex items-center gap-1.5 whitespace-nowrap ${
-                user?.role === 'business'
-                  ? 'bg-white text-[#0056D2] shadow-sm'
+              type="button"
+              onClick={() => handleAudienceClick('business')}
+              className={`px-2.5 py-1.5 rounded-t-md font-semibold transition flex items-center gap-1.5 whitespace-nowrap ${
+                activeAudience === 'business' || user?.role === 'business'
+                  ? 'bg-white text-[#065F46] shadow-sm'
                   : 'hover:text-white text-slate-300'
               }`}
             >
-              <Building2 className="w-3.5 h-3.5 text-sky-400" />
+              <Building2 className="w-3.5 h-3.5 text-emerald-400" />
               <span>{t.nav.forBusiness}</span>
             </button>
+
+            {/* 5. Government */}
             <button
-              onClick={() => {
-                if (user && !isAdmin) onRoleChange('student');
-                else if (!user) onOpenAuth('register', 'student');
-              }}
-              className={`px-3 py-1.5 rounded-t-md font-semibold transition flex items-center gap-1.5 whitespace-nowrap ${
-                user?.role === 'student'
-                  ? 'bg-white text-[#0056D2] shadow-sm'
+              type="button"
+              onClick={() => handleAudienceClick('government')}
+              className={`px-2.5 py-1.5 rounded-t-md font-semibold transition flex items-center gap-1.5 whitespace-nowrap ${
+                activeAudience === 'government' || user?.role === 'government'
+                  ? 'bg-white text-[#581C87] shadow-sm'
                   : 'hover:text-white text-slate-300'
               }`}
             >
-              <GraduationCap className="w-3.5 h-3.5 text-sky-400" />
-              <span>{t.nav.forStudent}</span>
+              <Landmark className="w-3.5 h-3.5 text-purple-400" />
+              <span>{t.nav.forGovernment}</span>
             </button>
           </div>
 
@@ -358,6 +395,17 @@ export default function Navbar({
                   </div>
                 </div>
 
+                {/* Prominent My Dashboard Button */}
+                {!isAdmin && onOpenDashboard && (
+                  <button
+                    onClick={onOpenDashboard}
+                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#0056D2] to-[#0284C7] hover:from-[#0046AD] hover:to-[#0369A1] text-white font-bold text-xs shadow-md transition whitespace-nowrap"
+                  >
+                    <LayoutDashboard className="w-3.5 h-3.5 text-sky-200" />
+                    <span>{t.nav.myDashboard}</span>
+                  </button>
+                )}
+
                 {/* Logout Button */}
                 <button
                   onClick={onLogout}
@@ -405,19 +453,35 @@ export default function Navbar({
           </div>
 
           {user && !isAdmin && (
-            <div className="p-3 bg-blue-50/70 rounded-xl border border-blue-200">
-              <label className="block text-xs font-bold text-[#0056D2] mb-1.5">
-                {t.nav.selectRoleHeader}:
-              </label>
-              <CustomDropdown
-                value={user.role}
-                onChange={(val) => {
-                  onRoleChange(val);
-                  setMobileMenuOpen(false);
-                }}
-                options={roleDropdownOptions}
-                variant="form"
-              />
+            <div className="space-y-2">
+              <div className="p-3 bg-blue-50/70 rounded-xl border border-blue-200">
+                <label className="block text-xs font-bold text-[#0056D2] mb-1.5">
+                  {t.nav.selectRoleHeader}:
+                </label>
+                <CustomDropdown
+                  value={user.role}
+                  onChange={(val) => {
+                    onRoleChange(val);
+                    setMobileMenuOpen(false);
+                  }}
+                  options={roleDropdownOptions}
+                  variant="form"
+                />
+              </div>
+
+              {onOpenDashboard && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    onOpenDashboard();
+                  }}
+                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#0056D2] to-[#0284C7] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md"
+                >
+                  <LayoutDashboard className="w-4 h-4 text-sky-200" />
+                  <span>{t.nav.myDashboard}</span>
+                </button>
+              )}
             </div>
           )}
 

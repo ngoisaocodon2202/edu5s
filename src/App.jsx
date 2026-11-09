@@ -5,11 +5,15 @@ import {
   GraduationCap,
   SearchX,
   LayoutDashboard,
+  ArrowRight,
+  Sparkles,
+  X,
 } from 'lucide-react';
 import {
   PILLARS,
   LEVELS,
   USER_ROLES,
+  AUDIENCES,
   DEFAULT_SEPAY_CONFIG,
 } from './data/coursesData';
 import Navbar from './components/Navbar';
@@ -20,6 +24,11 @@ import EnterpriseSection from './components/EnterpriseSection';
 import { CourseDetailModal, ClassroomModal } from './components/CourseModals';
 import AuthModal from './components/AuthModal';
 import AdminDashboard from './components/AdminDashboard';
+import StudentDashboard from './components/dashboards/StudentDashboard';
+import CampusDashboard from './components/dashboards/CampusDashboard';
+import IndividualDashboard from './components/dashboards/IndividualDashboard';
+import BusinessDashboard from './components/dashboards/BusinessDashboard';
+import GovernmentDashboard from './components/dashboards/GovernmentDashboard';
 import FloatingContact from './components/FloatingContact';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import Footer from './components/Footer';
@@ -57,6 +66,12 @@ export default function App() {
 
   // Admin Dashboard View Toggle
   const [showAdmin, setShowAdmin] = useState(false);
+
+  // 5 Dedicated Role Dashboard View Toggle (null | 'student' | 'campus' | 'individual' | 'business' | 'government')
+  const [activeDashboard, setActiveDashboard] = useState(null);
+
+  // Current Active Audience Segment Filter on Catalog ('all' | 'student' | 'campus' | 'individual' | 'business' | 'government')
+  const [activeAudience, setActiveAudience] = useState('all');
 
   // Catalog Filters
   const [selectedPillar, setSelectedPillar] = useState('all');
@@ -140,12 +155,37 @@ export default function App() {
 
   const filteredCourses = useMemo(() => {
     return roleScopedCourses.filter((course) => {
+      // 1. Audience segment filter (Coursera style)
+      if (activeAudience === 'student') {
+        const isStudentFit =
+          course.isFree ||
+          course.freeForStudent ||
+          course.price === 0 ||
+          course.level === 'beginner';
+        if (!isStudentFit) return false;
+      } else if (activeAudience === 'campus') {
+        // University students: Academic credit & capstone eligible
+        // All pillars have academic rigor, keep all or filter as needed
+      } else if (activeAudience === 'individual') {
+        // Working professionals: career certification and deep skills
+      } else if (activeAudience === 'business') {
+        // Enterprise L&D: practical office AI, system security, software engineering
+      } else if (activeAudience === 'government') {
+        // Digital literacy & national cyber safety: focus on security and non-hyper-advanced coding
+        if (course.pillar === 'ai-coding' && course.level === 'advanced') {
+          return false;
+        }
+      }
+
+      // 2. Pillar filter
       if (selectedPillar !== 'all' && course.pillar !== selectedPillar) {
         return false;
       }
+      // 3. Difficulty Level filter
       if (selectedLevel !== 'all' && course.level !== selectedLevel) {
         return false;
       }
+      // 4. Price filter
       const isFreeForCurrentUser =
         course.isFree ||
         (user?.role === 'student' && course.freeForStudent) ||
@@ -155,6 +195,7 @@ export default function App() {
       if (priceFilter === 'free' && !isFreeForCurrentUser) return false;
       if (priceFilter === 'paid' && isFreeForCurrentUser) return false;
 
+      // 5. Search query
       if (searchQuery.trim() !== '') {
         const q = searchQuery.toLowerCase();
         const matchTitle =
@@ -176,6 +217,7 @@ export default function App() {
     });
   }, [
     roleScopedCourses,
+    activeAudience,
     selectedPillar,
     selectedLevel,
     priceFilter,
@@ -245,7 +287,31 @@ export default function App() {
     return <BrandLogo brand="excel" className="w-4 h-4" />;
   };
 
+  const handleOpenDashboard = (explicitRole) => {
+    const role = explicitRole || user?.role || 'student';
+    if (role === 'admin') {
+      setShowAdmin(true);
+      return;
+    }
+    if (role.startsWith('individual')) {
+      setActiveDashboard('individual');
+    } else {
+      setActiveDashboard(role);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSelectAudience = (audId) => {
+    setActiveAudience(audId);
+    setSelectedPillar('all');
+    setSelectedLevel('all');
+    setPriceFilter('all');
+    const el = document.getElementById('courses-catalog');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
   const handleGoHome = () => {
+    setActiveDashboard(null);
     setShowAdmin(false);
     setDetailCourse(null);
     setClassroomCourse(null);
@@ -254,6 +320,7 @@ export default function App() {
     setSelectedLevel('all');
     setPriceFilter('all');
     setSearchQuery('');
+    setActiveAudience('all');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -270,11 +337,116 @@ export default function App() {
     );
   }
 
+  // If one of the 5 Dedicated Role Dashboards is active, render it
+  if (activeDashboard) {
+    let dashboardContent = null;
+    if (activeDashboard === 'student') {
+      dashboardContent = (
+        <StudentDashboard
+          user={user}
+          courses={courses}
+          unlockedIds={unlockedIds}
+          onStartCourse={(c) => {
+            setActiveDashboard(null);
+            setDetailCourse(c);
+          }}
+          onBackToCatalog={() => setActiveDashboard(null)}
+        />
+      );
+    } else if (activeDashboard === 'campus') {
+      dashboardContent = (
+        <CampusDashboard
+          user={user}
+          courses={courses}
+          unlockedIds={unlockedIds}
+          onStartCourse={(c) => {
+            setActiveDashboard(null);
+            setDetailCourse(c);
+          }}
+          onBackToCatalog={() => setActiveDashboard(null)}
+        />
+      );
+    } else if (activeDashboard === 'individual') {
+      dashboardContent = (
+        <IndividualDashboard
+          user={user}
+          courses={courses}
+          unlockedIds={unlockedIds}
+          onStartCourse={(c) => {
+            setActiveDashboard(null);
+            setDetailCourse(c);
+          }}
+          onBackToCatalog={() => setActiveDashboard(null)}
+        />
+      );
+    } else if (activeDashboard === 'business') {
+      dashboardContent = (
+        <BusinessDashboard
+          user={user}
+          courses={courses}
+          unlockedIds={unlockedIds}
+          onStartCourse={(c) => {
+            setActiveDashboard(null);
+            setDetailCourse(c);
+          }}
+          onBackToCatalog={() => setActiveDashboard(null)}
+        />
+      );
+    } else if (activeDashboard === 'government') {
+      dashboardContent = (
+        <GovernmentDashboard
+          user={user}
+          courses={courses}
+          unlockedIds={unlockedIds}
+          onStartCourse={(c) => {
+            setActiveDashboard(null);
+            setDetailCourse(c);
+          }}
+          onBackToCatalog={() => setActiveDashboard(null)}
+        />
+      );
+    }
+
+    if (dashboardContent) {
+      return (
+        <div className="min-h-screen flex flex-col bg-[#F8FAFC]">
+          <Navbar
+            user={user}
+            activeAudience={activeAudience}
+            onSelectAudience={(aud) => {
+              setActiveAudience(aud);
+              setActiveDashboard(aud);
+            }}
+            selectedPillar={selectedPillar}
+            onSelectPillar={setSelectedPillar}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            onOpenAuth={handleOpenAuth}
+            onLogout={handleLogout}
+            onRoleChange={handleRoleChange}
+            onOpenAdmin={() => setShowAdmin(true)}
+            onOpenDashboard={() => handleOpenDashboard()}
+            onGoHome={handleGoHome}
+          />
+          {dashboardContent}
+          <Footer onSelectPillar={setSelectedPillar} onGoHome={handleGoHome} />
+        </div>
+      );
+    }
+  }
+
+  const activeAudienceObj =
+    activeAudience !== 'all'
+      ? AUDIENCES.find((a) => a.id === activeAudience) || null
+      : null;
+
   return (
     <div className="min-h-screen flex flex-col bg-[#F8FAFC] text-slate-900 overflow-x-hidden">
       {/* Top Navbar */}
       <Navbar
         user={user}
+        activeAudience={activeAudience}
+        onSelectAudience={handleSelectAudience}
         selectedPillar={selectedPillar}
         onSelectPillar={setSelectedPillar}
         searchQuery={searchQuery}
@@ -283,6 +455,7 @@ export default function App() {
         onLogout={handleLogout}
         onRoleChange={handleRoleChange}
         onOpenAdmin={() => setShowAdmin(true)}
+        onOpenDashboard={() => handleOpenDashboard()}
         onGoHome={handleGoHome}
       />
 
@@ -293,6 +466,9 @@ export default function App() {
         onSelectPillar={setSelectedPillar}
         onRoleChange={handleRoleChange}
         onOpenAdmin={() => setShowAdmin(true)}
+        onOpenDashboard={() => handleOpenDashboard()}
+        activeAudience={activeAudience}
+        onSelectAudience={handleSelectAudience}
         stats={roleStats}
       />
 
@@ -311,6 +487,53 @@ export default function App() {
         className="py-10 sm:py-14 lg:py-16 flex-1"
       >
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Audience Spotlight Banner (Coursera-style) */}
+          {activeAudienceObj && (
+            <div className="mb-8 rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white shadow-xl relative overflow-hidden border border-blue-500/30">
+              <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-blue-500/10 blur-3xl pointer-events-none" />
+              <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="space-y-3 max-w-3xl">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-white/20 text-white backdrop-blur-sm border border-white/20 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                      {lang === 'en' ? activeAudienceObj.badgeEn : activeAudienceObj.badge}
+                    </span>
+                    <span className="text-xs text-blue-200 font-medium">
+                      {lang === 'en' ? 'Coursera 5S AI Model' : 'Hệ sinh thái Coursera 5S AI'}
+                    </span>
+                  </div>
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                    {lang === 'en' ? activeAudienceObj.titleEn : activeAudienceObj.title}
+                  </h3>
+                  <p className="text-blue-100 text-xs sm:text-sm leading-relaxed">
+                    {lang === 'en' ? activeAudienceObj.taglineEn : activeAudienceObj.tagline}
+                  </p>
+                  <p className="text-slate-300 text-xs sm:text-sm">
+                    {lang === 'en' ? activeAudienceObj.descriptionEn : activeAudienceObj.description}
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 shrink-0">
+                  <button
+                    onClick={() => handleOpenDashboard(activeAudienceObj.id)}
+                    className="px-6 py-3.5 rounded-xl bg-white text-blue-900 hover:bg-blue-50 font-extrabold text-sm shadow-lg transition flex items-center gap-2 hover:scale-[1.02] active:scale-95 cursor-pointer"
+                  >
+                    <LayoutDashboard className="w-4 h-4 text-[#0056D2]" />
+                    <span>{lang === 'en' ? 'Open Dashboard' : `Vào Bảng Điều Khiển`}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setActiveAudience('all')}
+                    className="px-4 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm transition flex items-center gap-1.5 cursor-pointer"
+                    title={lang === 'en' ? 'Clear audience filter' : 'Bỏ lọc phân hệ'}
+                  >
+                    <X className="w-4 h-4" />
+                    <span>{lang === 'en' ? 'All Roles' : 'Tất cả'}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
           {/* Catalog Header */}
           <ScrollReveal
             direction="up"

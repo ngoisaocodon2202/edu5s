@@ -4,12 +4,16 @@ import {
   Sparkles,
   CheckCircle2,
   GraduationCap,
+  School,
+  Building2,
+  UserCheck,
+  Landmark,
   Lock,
   Unlock,
   SlidersHorizontal,
   LayoutDashboard,
 } from 'lucide-react';
-import { USER_ROLES } from '../data/coursesData';
+import { USER_ROLES, AUDIENCES } from '../data/coursesData';
 import { BrandLogo, ScrollReveal } from './BrandLogos';
 import CustomDropdown from './CustomDropdown';
 import { useLanguage } from '../context/LanguageContext';
@@ -20,6 +24,9 @@ export default function HeroSection({
   onSelectPillar,
   onRoleChange,
   onOpenAdmin,
+  onOpenDashboard,
+  activeAudience = 'all',
+  onSelectAudience,
   stats,
 }) {
   const { lang, t } = useLanguage();
@@ -38,6 +45,8 @@ export default function HeroSection({
         ? 'FREE'
         : r.id === 'business'
         ? 'B2B'
+        : r.id === 'campus'
+        ? 'CREDIT'
         : undefined,
   }));
 
@@ -75,6 +84,18 @@ export default function HeroSection({
               </p>
 
               <div className="flex flex-wrap items-center gap-3 pt-2">
+                {!isAdmin && onOpenDashboard && (
+                  <button
+                    type="button"
+                    onClick={() => onOpenDashboard()}
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-sky-400 to-[#0056D2] hover:from-sky-300 hover:to-[#0046AD] text-white font-extrabold text-xs sm:text-sm shadow-lg transition"
+                  >
+                    <LayoutDashboard className="w-4 h-4 text-sky-100" />
+                    <span>{t.nav.myDashboard}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                )}
+
                 <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3.5 sm:px-4 py-2 rounded-xl border border-white/15">
                   <Unlock className="w-4 h-4 text-sky-300 shrink-0" />
                   <span className="text-xs sm:text-sm font-semibold">
@@ -265,6 +286,42 @@ export default function HeroSection({
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-[#0056D2] shrink-0" />
                 <span>{t.hero.statPostgres}</span>
+              </div>
+            </div>
+
+            {/* 5 Audience Segments Switcher (Coursera Benchmark) */}
+            <div className="pt-3 border-t border-slate-200/80">
+              <div className="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-[#0056D2]" />
+                <span>5 PHÂN HỆ ĐÀO TẠO CHUẨN COURSERA (BẤM ĐỂ KHÁM PHÁ):</span>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                {AUDIENCES.map((aud) => (
+                  <button
+                    key={aud.id}
+                    type="button"
+                    onClick={() => {
+                      if (onSelectAudience) onSelectAudience(aud.id);
+                      document.getElementById('courses-catalog')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border shadow-2xs ${
+                      activeAudience === aud.id
+                        ? 'bg-[#0056D2] text-white border-[#0056D2] shadow-sm'
+                        : 'bg-white hover:bg-blue-50 text-slate-700 border-slate-200'
+                    }`}
+                  >
+                    <span>{lang === 'en' ? aud.shortEn : aud.short}</span>
+                    <span
+                      className={`text-[9px] px-1.5 py-0.5 rounded font-extrabold ${
+                        activeAudience === aud.id
+                          ? 'bg-white/20 text-white'
+                          : 'bg-slate-100 text-[#0056D2]'
+                      }`}
+                    >
+                      {lang === 'en' ? aud.badgeEn : aud.badge}
+                    </span>
+                  </button>
+                ))}
               </div>
             </div>
           </ScrollReveal>
